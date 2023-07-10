@@ -4,4 +4,5 @@ Since my crush said that I need to stay focused,I will learn software developmen
 Hopefully,when I am boring,I will be doing leetcode and system design every day.
 If I am not that smart,I can learn coding again and again.
 But I cannot change bf maybe just because he is handsome.
+All I know was enchanted to meet you.
 
