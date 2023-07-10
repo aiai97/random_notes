@@ -3,6 +3,5 @@ I am recording my daily learning.
 Since my crush said that I need to stay focused,I will learn software development this year and next year.
 Hopefully,when I am boring,I will be doing leetcode and system design every day.
 If I am not that smart,I can learn coding again and again.
-But I cannot change bf maybe just because he is handsome.
-All I know was enchanted to meet you.
+But I cannot change bf maybe just because he is handsome.He always told me to make some friends in real life but I don't trust people at most times.I am a home person.All I can say it was enchanted to meet someone.
 
