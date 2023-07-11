@@ -38,6 +38,7 @@
 调用删除方法，传入合适的参数。
 验证方法返回的错误是否为 nil，表示删除成功。
 尝试读取已删除的对象并验证其不存在于数据库或持久存储中。
+```
 package data_test
 
 import (
@@ -107,3 +108,4 @@ var _ = Describe("User", func() {
 		Ω(password1).Should(BeFalse()) // 密码验证不通过
 	})
 })
+```
