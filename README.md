@@ -7,4 +7,5 @@ I feel regretful because when I was bad in programming,I can amend my knowledge 
 amend someone's broken heart.
 I do learn a profound lesson that is,emmmm,bf or husband is much much more important than learning coding although I keep coding every day.
 I read some notes and people say that I need to show my initiative to be independent.
+要是学习跟写日记一样简单，我肯定学得可好了。
 
