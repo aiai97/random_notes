@@ -191,3 +191,54 @@ Indexing Pressure（索引压力）：Indexing Pressure表示索引操作对系�
 搜索分析（Search Analysis）：定义了索引级别的搜索分析配置，如停用词、同义词等。
 
 索引状态（Index Status）：记录了索引的健康状况、分片分配情况和索引的大小等统计信息。
+
+Index Modules（索引模块）：Index Modules负责管理索引的创建、配置和删除，提供了对索引的整体控制和管理。
+
+Analysis（分析）：Analysis模块负责对文本进行分析和处理，包括分词、词性过滤、同义词处理等，以便在搜索和聚合时能够正确处理和匹配文本数据。
+
+Index Shard Allocation（索引分片分配）：Index Shard Allocation负责将索引的分片（shard）分配到集群的不同节点上，以实现数据的分布和负载均衡，提高系统的性能和可用性。
+
+Index Blocks（索引块）：Index Blocks用于阻止对索引的读写操作，可以控制索引的访问权限、保护索引数据的完整性，或在进行维护操作时防止对索引的修改。
+
+Mapper（映射器）：Mapper负责将文档的JSON数据映射到索引中的字段，并定义字段的类型、分析器等属性，帮助构建索引的结构和元数据。
+
+Merge（合并）：Merge模块用于合并索引分片中的小段（segments），以减少存储空间的使用和提高查询性能，优化索引的数据组织方式。
+
+Similarity Module（相似度模块）：Similarity Module定义了在搜索和评分时使用的相似度算法，影响搜索结果的排序和相关性得分的计算，帮助提供更准确的搜索结果。
+
+Slow Log（慢日志）：Slow Log用于记录执行时间较长的搜索请求和索引请求，以便进行性能分析、调优和故障排查。
+
+Store（存储）：Store模块负责索引数据的持久化存储，包括将文档和索引结构写入磁盘，以及从磁盘加载索引数据，确保数据的持久性和可靠性。
+
+Translog（事务日志）：Translog用于记录索引的写操作，实现数据的持久化和恢复能力，提供较低的写入延迟，保证数据的一致性和可靠性。
+
+History Retention（历史保留）：History Retention定义了索引操作的历史记录保留策略，可以配置保留操作历史的时间和数量，用于追踪和审计索引操作。
+
+Index Sorting（索引排序）：Index Sorting用于对索引中的数据进行排序，优化搜索和聚合操作的性能，提高查询效率。
+
+Indexing Pressure（索引压力）：Indexing Pressure用于监测和管理索引操作对系统资源的压力，帮助调整索引的写入速率和资源分配，保持系统的稳定性。
+
+### ELK
+ingest 阶段：
+
+Elastic Agent 和 Beats：用于收集和发送日志、度量和其他类型的数据到 Elasticsearch。可以实现数据的收集、传输和监控，并添加安全保护功能。
+Fleet：用于集中管理 Elastic Agents 和它们的配置策略，监控 Elastic Agents 的状态，管理策略和更新。
+
+Elastic APM：用于应用程序性能监控，收集详细的性能信息，包括请求响应时间、数据库查询、缓存调用、外部 HTTP 请求等。帮助快速定位和解决性能问题。
+Store 阶段：
+
+Elasticsearch：分布式搜索和分析引擎，用于存储、索引和提供全文搜索和分析功能。能够高效地存储和索引各种类型的数据。
+Consume 阶段：
+
+Kibana：用于查询和可视化存储在 Elasticsearch 中的数据，分析和可视化数据。同时还提供 Elastic Enterprise Search、Elastic Observability 和 Elastic Security 解决方案。
+Elasticsearch 客户端：提供用于从常见编程语言直接访问 Elasticsearch 中的数据的 API 请求和响应管理机制。
+
+ELK 组合适用于多种应用场景，包括但不限于以下情况：
+
+日志管理与分析：ELK 提供了强大的日志收集、存储、搜索和分析能力，可帮助组织管理和分析大量的日志数据，实现日志监控、故障排查、安全审计等功能。
+
+实时数据分析与监控：通过将实时数据存储在 Elasticsearch 中，结合 Kibana 的可视化功能，可以实时监控指标、生成报表和仪表板，以支持业务决策和性能优化。
+
+搜索引擎应用：Elasticsearch 是一种强大的全文搜索引擎，适用于构建搜索功能和搜索引擎应用，如电子商务、内容管理系统、知识库和文档检索等。
+
+数据分析与挖掘：Elasticsearch 提供了强大的聚合和复杂查询功能，可以进行高级的数据分析和挖掘，支持业务智能、用户行为分析和数据探索等应用。
