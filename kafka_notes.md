@@ -177,3 +177,116 @@ none：
 说明：支付服务对于偏移量的管理需要更严格的控制，以确保支付操作的一致性和安全性。在这种情况下，如果消费者组尚未提交过偏移量，可以选择将 auto.offset.reset 设置为 none，这样消费者将抛出异常，要求手动处理起始位置。支付服务可以根据具体的业务需求，自主决定起始位置。
 #### data model
 Producer 用于发送消息到 Kafka 集群，Consumer 用于从 Kafka 集群中拉取和处理消息，Topic 用于分类和组织消息，Partition 用于分割和分布消息，Broker 是 Kafka 集群中的服务器节点。
+Producer（生产者）和 ProducerRecord（生产者记录）：
+
+Producer 类使用 ProducerRecord 类来封装要发送到 Kafka 的消息记录。
+Consumer（消费者）和 ConsumerRecord（消费者记录）：
+
+Consumer 类通过消费者订阅的主题和分区来接收 ConsumerRecord 类的消息记录。
+Consumer 和 ConsumerGroup（消费者组）：
+
+Consumer 类可以与一个或多个 ConsumerGroup 类关联，以实现消费者组的协同消费。
+Topic（主题）和 Partition（分区）：
+
+Topic 类包含多个 Partition 对象，以支持主题的分区和水平扩展。
+Partition 和 Offset（偏移量）：
+
+Partition 类中维护了当前分区的 Offset 对象，以跟踪消费者在分区中的位置。
+Broker（代理）和 TopicPartition（主题分区）：
+
+Broker 类维护了与每个 TopicPartition 对象关联的分区数据。
+
+#### 副本机制
+```
+# 创建主题并指定副本因子
+create_topic("my_topic", num_partitions=3, replication_factor=2)
+
+# 发布消息到主题
+produce_message("my_topic", key="key", value="value")
+
+# 消费者从主题订阅消息
+consumer.subscribe("my_topic")
+
+# 循环消费消息
+while True:
+    records = consumer.poll()
+    for record in records:
+        process_message(record)
+
+# 副本机制保证数据冗余备份
+# 当消息被发布时，Kafka 将数据复制到多个副本（broker）上，每个副本保存一份数据副本
+# 当某个副本（broker）发生故障时，Kafka 可以从其他副本上获取数据，确保数据的可靠性和可用性
+```
+num_partitions 的调整：
+
+假设你的业务中有 10 个独立的消费者，每个消费者可以并行处理消息。为了实现最大的并行性，你可以将 num_partitions 设置为 10 或 10 的倍数，以确保每个消费者都有分区可以处理。
+如果你的业务中有多个不同的消息类型，并且你希望对它们进行隔离和独立处理，你可以根据消息类型来划分分区。例如，你可以为订单相关的消息分配一个分区，为库存更新相关的消息分配另一个分区，以此类推。
+replication_factor 的调整：
+
+如果你的业务对可用性要求很高，并且希望在某个副本发生故障时仍然能够访问数据，你可以将 replication_factor 设置为大于等于 3。这样，即使一个副本不可用，仍有其他两个副本可以提供数据。
+如果你的业务对可用性要求不是特别高，或者资源有限，你可以将 replication_factor 设置为 2，确保至少有一个备份副本可用。
+
+过程：保证Availability
+副本机制：
+
+每个主题的分区可以有多个副本，其中一个副本被指定为领导者副本（Leader Replica），其他副本称为追随者副本（Follower Replica）。
+生产者将消息发送到领导者副本，然后领导者副本负责将消息复制到所有追随者副本。
+追随者副本会按照领导者副本的顺序复制消息，确保数据的一致性。
+如果领导者副本发生故障，Kafka 会自动从追随者副本中选举一个新的领导者副本，确保数据的可用性和一致性。
+消息分发策略：
+
+Kafka 提供了多种分发策略，用于确定消息应该发送到哪个分区。
+默认分发策略是 RoundRobinPartitioner，它将消息平均地分发到所有可用的分区中。
+另外，Kafka 还提供了其他分发策略，例如：
+HashPartitioner：根据消息的键（Key）进行哈希计算，将具有相同键的消息发送到同一个分区。
+CustomPartitioner：自定义分发策略，根据业务需求进行分区逻辑的实现。
+选择分发策略的依据取决于具体的业务需求和场景：
+
+如果希望消息被均匀地分发到所有分区，可以使用默认的 RoundRobinPartitioner。
+如果希望具有相同键的消息被发送到同一个分区，可以使用 HashPartitioner。
+如果需要根据自定义逻辑来决定消息的分发，可以实现自定义的分发策略。
+
+#### 使用自定义分发策略
+```
+public class CustomPartitioner implements Partitioner {
+    @Override
+    public int partition(String topic, Object key, byte[] keyBytes, Object value, byte[] valueBytes, Cluster cluster) {
+        // 自定义分区逻辑
+        // 返回分区号
+        return somePartitionNumber;
+    }
+
+    @Override
+    public void close() {
+        // 关闭操作
+    }
+
+    @Override
+    public void configure(Map<String, ?> configs) {
+        // 配置操作
+    }
+}
+
+```
+对于自定义分发策略，你可以实现一个继承自 org.apache.kafka.clients.producer.Partitioner 的类，自定义分区逻辑。
+```
+public class CustomPartitioner implements Partitioner {
+    @Override
+    public int partition(String topic, Object key, byte[] keyBytes, Object value, byte[] valueBytes, Cluster cluster) {
+        // 自定义分区逻辑
+        // 返回分区号
+        return somePartitionNumber;
+    }
+
+    @Override
+    public void close() {
+        // 关闭操作
+    }
+
+    @Override
+    public void configure(Map<String, ?> configs) {
+        // 配置操作
+    }
+}
+
+```
