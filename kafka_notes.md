@@ -87,5 +87,93 @@ Debezium Connectors（从关系型数据库捕获变更事件，并将其写入 
 该章节介绍了Kafka的配额机制，用于限制生产者和消费者的资源使用，以保护集群的稳定性和可靠性。
 
 示例：一个公司设置了Kafka的配额，限制每个生产者的数据发送速率，以防止过载导致的性能问题和数据丢失。
+### configuration for producers and consumers
+bootstrap.servers：这是一个必需的配置项，用于指定 Kafka 集群的地址。它需要指定一个或多个 Kafka 服务器的主机名和端口号，用逗号分隔。例如，"localhost:9092" 表示本地运行的 Kafka 服务器。
 
+key.serializer 和 value.serializer：这些配置项指定生产者使用的序列化器，用于将键和值对象转换为字节数组以进行传输。键和值可以是任意类型的对象。常见的序列化器包括 StringSerializer、ByteArraySerializer、JSONSerializer 等。
 
+group.id：这是消费者所属的消费者组的唯一标识符。当多个消费者属于同一个消费者组时，它们共同消费主题的消息。这个配置项是消费者组管理和协调的关键。
+
+key.deserializer 和 value.deserializer：这些配置项指定消费者使用的反序列化器，用于将接收到的字节数组转换回键和值对象。与生产者的序列化器对应，常见的反序列化器包括 StringDeserializer、ByteArrayDeserializer、JSONDeserializer 等。
+
+enable.auto.commit：这个配置项指定消费者是否自动提交消费的偏移量。如果设置为 true，则消费者会自动定期提交偏移量，以记录消费的位置。如果设置为 false，则需要手动控制偏移量的提交。
+
+auto.offset.reset：当消费者启动时或偏移量不存在或超出范围时，该配置项指定消费者的起始位置。可选的值包括 "earliest"（从最早的可用偏移量开始消费）和 "latest"（从最新的偏移量开始消费）。
+
+选择使用哪种序列化器取决于你的数据类型和需求。如果你的数据是纯文本类型，可以使用 StringSerializer；如果你的数据是二进制数据或自定义格式，可以使用 ByteArraySerializer；如果你的数据是结构化的对象，并需要与其他系统进行交互，可以使用 JSONSerializer。
+
+##### 是否允许消费者自动提交数据
+允许消费者自动提交偏移量：
+假设银行有一个消费者组，用于处理用户银行交易记录的消息。在这种情况下，如果消费者启用了自动提交偏移量，它会定期将已成功处理的消息的偏移量自动提交到 Kafka。这样，即使消费者发生故障或重新启动，它也可以从上次提交的偏移量位置继续消费，避免重复处理已处理的消息。
+```
+Properties props = new Properties();
+props.put("enable.auto.commit", "true");
+props.put("auto.offset.reset", "earliest");
+// 其他配置项...
+
+KafkaConsumer<String, String> consumer = new KafkaConsumer<>(props);
+consumer.subscribe(Collections.singletonList("bank-transactions"));
+
+while (true) {
+    ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(100));
+    for (ConsumerRecord<String, String> record : records) {
+        // 处理银行交易记录消息
+        processBankTransaction(record);
+    }
+}
+```
+消费者会定期自动提交已成功处理的偏移量，确保消息的一次性处理。即使消费者出现故障或重启，它也会从上次提交的偏移量处继续消费。
+
+不允许消费者自动提交偏移量：
+假设银行有一个消费者组，用于处理用户的账户余额更新消息。在这种情况下，如果消费者禁用了自动提交偏移量，它可以根据具体的业务逻辑来控制何时提交偏移量。例如，消费者可以在成功更新用户账户余额后手动提交偏移量。这样可以确保只有在成功处理并更新账户余额后才提交偏移量，避免重复或丢失处理。
+```
+Properties props = new Properties();
+props.put("enable.auto.commit", "false");
+props.put("auto.offset.reset", "latest");
+// 其他配置项...
+
+KafkaConsumer<String, String> consumer = new KafkaConsumer<>(props);
+consumer.subscribe(Collections.singletonList("account-updates"));
+
+while (true) {
+    ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(100));
+    for (ConsumerRecord<String, String> record : records) {
+        // 处理账户余额更新消息
+        processAccountUpdate(record);
+
+        // 手动提交偏移量
+        consumer.commitSync();
+    }
+}
+
+```
+消费者禁用了自动提交偏移量，并在成功处理账户余额更新后手动提交偏移量。这样可以根据具体的业务逻辑来控制何时提交偏移量，确保只有在成功处理消息后才进行提交。
+
+根据场景决定是否允许消费者自动提交偏移量的关键因素是消息处理的一致性和可靠性要求。如果消息处理的一致性和可靠性对于业务非常重要，可以禁用自动提交偏移量并在合适的时机手动提交，以确保消息的一次性处理和偏移量的准确记录。如果消息处理的一致性要求相对较低，并且在某些情况下可以容忍一些重复处理或丢失处理的情况，可以启用自动提交偏移量以简化消费者的操作。
+
+##### 如何确定事务的一致性要求
+高一致性要求的业务：
+
+金融交易：在金融交易领域，如股票交易、支付交易等，一致性是至关重要的。任何交易的丢失或重复处理都可能导致资金损失或风险增加。
+订单处理：在线商店的订单处理需要保证订单状态的一致性。丢失订单或重复处理可能导致库存错误、支付问题或客户体验问题。
+允许一定程度数据丢失的业务：
+
+日志记录：一些日志记录业务，如应用程序日志、系统日志等，对于丢失少量日志消息的情况可以容忍。在这种情况下，更重要的是高吞吐量和低延迟，而不是每条日志消息的一致性。
+监控数据：某些监控数据，如服务器性能指标、网络流量数据等，对于丢失少量数据的情况可以容忍。重点是及时获取趋势和异常情况，而不需要每个数据点的完全一致性。
+根据上述示例，可以根据业务的特点和需求来确定消费者自动提交偏移量的配置。对于高一致性要求的业务，可以禁用自动提交偏移量并在确保处理成功后手动提交偏移量，以确保消息的一次性处理和偏移量的准确记录。对于允许一定程度数据丢失的业务，可以启用自动提交偏移量以简化消费者的操作，并接受可能的重复处理或丢失处理的情况。
+
+auto.offset.reset
+earliest：
+
+场景：电商平台中的订单处理。
+说明：在订单处理中，需要确保每个订单都被及时处理。如果消费者组在启动时设置为 earliest，它将从最早的可用偏移量开始消费，即使之前没有提交过偏移量。这样可以确保之前未处理的订单也被及时处理。
+latest：
+
+场景：电商平台中的实时库存更新。
+说明：在实时库存更新中，只关心最新的库存信息。如果消费者组在启动时设置为 latest，它将从当前可用的最新偏移量开始消费，确保消费者只处理最新的库存更新消息，而不需要访问过时的消息。
+none：
+
+场景：电商平台中的支付服务。
+说明：支付服务对于偏移量的管理需要更严格的控制，以确保支付操作的一致性和安全性。在这种情况下，如果消费者组尚未提交过偏移量，可以选择将 auto.offset.reset 设置为 none，这样消费者将抛出异常，要求手动处理起始位置。支付服务可以根据具体的业务需求，自主决定起始位置。
+#### data model
+Producer 用于发送消息到 Kafka 集群，Consumer 用于从 Kafka 集群中拉取和处理消息，Topic 用于分类和组织消息，Partition 用于分割和分布消息，Broker 是 Kafka 集群中的服务器节点。
