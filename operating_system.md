@@ -69,7 +69,7 @@ NIC 缓冲区（NIC Buffer）：1个或多个缓冲区（位于网络接口卡�
 
 在 Kafka 中，通过使用零拷贝技术，数据可以直接从一个缓冲区（例如页面缓存）传输到另一个缓冲区（例如套接字缓冲区），避免了不必要的数据复制操作，从而提高了数据传输的效率。
 linux中的sendfile
-'''
+```
 #include <sys/sendfile.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -87,5 +87,5 @@ ssize_t sent_bytes = sendfile(socket_fd, fd, &offset, remaining_bytes);
 // 关闭文件和套接字
 close(fd);
 close(socket_fd);
-'''
+```
 在上述示例中，sendfile 系统调用用于将文件内容从文件描述符 fd 对应的文件发送到套接字 socket_fd 中。它实现了在内核空间和用户空间之间的零拷贝数据传输。
