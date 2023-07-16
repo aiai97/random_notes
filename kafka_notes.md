@@ -430,6 +430,30 @@ jetty-util-9.4.51.v20230217.jar：
 支持异步请求和响应：传统的同步请求-响应模型在高并发场景下效率较低。异步请求和响应允许服务器处理多个请求同时进行的情况，从而提高系统的吞吐量和性能。这些功能允许开发者将一些请求设置为异步操作，使服务器能够同时处理多个请求，并在完成后返回响应。
 
 处理安全性：Web应用程序需要保护用户的数据和隐私，以及防止各种安全威胁和攻击。处理安全性的功能提供了身份验证、授权、加密传输和防止常见的安全漏洞（如跨站脚本攻击和SQL注入）等机制，确保Web应用程序的安全性。
+
+嵌入式部署指的是将Web服务器直接嵌入到应用程序中，作为应用程序的一部分来运行，而不是作为独立的外部服务器。在嵌入式部署中，应用程序和Web服务器运行在同一个进程内，共享同一个资源和上下文。
+
+具体来说，嵌入式部署将Web服务器的功能集成到应用程序中，使得应用程序能够自行启动和管理Web服务器实例，处理HTTP请求和响应，以及提供Web服务。应用程序可以通过编程方式配置和定制Web服务器的行为，包括路由规则、请求处理、会话管理等。
+
+Jetty和Tomcat都是流行的Java Web服务器，它们各自适合不同的场景和问题。
+
+Jetty适合以下场景和问题：
+
+嵌入式部署：Jetty非常适合作为嵌入式服务器使用，可以轻松地集成到Java应用程序中。这对于需要将Web容器直接嵌入到应用程序中的场景非常有用，例如开发嵌入式设备、单元测试和集成测试等。
+
+高并发和低延迟：Jetty在处理高并发请求时表现出色，并且具有较低的延迟。它采用非阻塞的IO模型，支持异步请求和响应，以及事件驱动的处理方式。这使得Jetty在需要处理大量并发连接的场景下非常高效。
+
+WebSockets和异步编程：Jetty对于实现WebSockets和处理异步编程非常强大。它提供了完善的支持，使开发者能够轻松地构建基于WebSockets的实时应用程序和处理异步操作。
+
+Tomcat适合以下场景和问题：
+
+传统的Java Web应用程序：Tomcat是最常用的Java Web服务器之一，它对于传统的Java Web应用程序非常适用。如果你需要部署和管理基于Servlet和JSP的Web应用程序，Tomcat提供了简单而强大的功能。
+
+Java EE和企业级应用程序：Tomcat作为Java EE规范的参考实现，对于部署和运行Java EE应用程序非常合适。它支持Java EE的核心规范，如Servlet、JSP、JNDI、JDBC和JavaMail等。
+
+大规模部署和可扩展性：Tomcat在大规模部署和可扩展性方面表现出色。它支持集群和负载均衡，可以通过配置多个Tomcat实例来处理高负载，并提供了可靠的管理和监控工具。
+
+总结来说，Jetty适用于需要嵌入式部署、高并发和低延迟、WebSockets和异步编程的场景。而Tomcat适用于传统的Java Web应用程序、Java EE和企业级应用程序、大规模部署和可扩展性的场景。选择哪个服务器取决于你的具体需求和应用程序的特性。
 JSON和数据序列化：
 
 jackson-annotations-2.13.5.jar: Jackson注解库，用于支持JSON序列化和反序列化。
@@ -495,3 +519,66 @@ javax.activation-api-1.2.0.jar: Java Activation API库，提供激活框架的�
 javax.annotation-api-1.3.2.jar: Java Annotation API库，提供注解相关的功能。
 javax.servlet-api-3.1.0.jar: Java Servlet API库，提供Servlet规范的支持。
 javax.ws.rs-api-2.1.1.jar: Java JAX-RS API库，提供JAX-RS的支持。
+
+#### 脚本
+Kafka服务器管理和操作：
+
+kafka-server-start.sh：启动Kafka代理服务器。
+kafka-server-stop.sh：停止Kafka代理服务器。
+kafka-storage.sh：显示Kafka代理节点上的存储目录和磁盘使用情况。
+kafka-log-dirs.sh：显示Kafka代理节点上的日志目录和磁盘使用情况。
+kafka-configs.sh：配置Kafka的动态配置参数，如增加或删除主题级别的配置。
+kafka-topics.sh：管理和查询Kafka主题的创建、删除、配置等。
+kafka-acls.sh：管理Kafka的访问控制列表（ACL），用于配置和管理Kafka的安全访问权限。
+kafka-reassign-partitions.sh：重新分配Kafka主题分区的副本分布。
+kafka-replica-verification.sh：验证Kafka主题分区的副本完整性。
+kafka-metadata-quorum.sh：显示Kafka集群中的元数据信息。
+kafka-metadata-shell.sh：连接到Kafka集群的元数据服务，并提供交互式Shell界面。
+kafka-broker-api-versions.sh：显示Kafka集群中支持的功能和特性。
+Kafka消费者相关操作：
+
+kafka-console-consumer.sh：启动Kafka的命令行消费者，用于从Kafka主题中消费消息。
+kafka-consumer-groups.sh：管理和查询Kafka消费者组的偏移量、消费情况等。
+kafka-consumer-perf-test.sh：测试Kafka消费者的性能和吞吐量。
+kafka-verifiable-consumer.sh：用于验证Kafka主题的消费者。
+Kafka生产者相关操作：
+
+kafka-console-producer.sh：启动Kafka的命令行生产者，用于向Kafka主题发送消息。
+kafka-producer-perf-test.sh：测试Kafka生产者的性能和吞吐量。
+kafka-verifiable-producer.sh：用于验证Kafka主题的生产者。
+Kafka Connect相关操作：
+
+connect-distributed.sh：启动Kafka Connect分布式模式，用于将外部系统连接到Kafka集群。
+connect-mirror-maker.sh：启动Kafka Mirror Maker，用于在两个独立的Kafka集群之间复制和同步消息。
+connect-standalone.sh：启动Kafka Connect独立模式，用于在单个进程中运行连接器任务。
+Kafka工具和测试：
+
+kafka-e2e-latency.sh：测量Kafka的端到端延迟。
+kafka-leader-election.sh：手动触发Kafka主题分区的领导者选举过程。
+kafka-dump-log.sh：将Kafka的日志文件内容导出为可读的格式。
+kafka-get-offsets.sh：获取Kafka主题中的分区偏移量信息。
+kafka-jmx.sh：连接到Kafka JMX端口，获取Kafka的监控指标。
+kafka-run-class.sh：用于在Kafka环境中运行指定的Java类。
+kafka-streams-application-reset.sh：重置Kafka Streams应用程序的状态。
+kafka-transactions.sh：管理和查询Kafka事务。
+kafka-delegation-tokens.sh：管理和查询Kafka委托令牌。
+trogdor.sh：用于测试和模拟Kafka集群故障和容错的工具。
+ZooKeeper服务器管理和操作：
+
+zookeeper-server-start.sh：启动ZooKeeper服务器。
+zookeeper-server-stop.sh：停止ZooKeeper服务器。
+zookeeper-shell.sh：连接到ZooKeeper服务器，提供交互式Shell界面。
+zookeeper-security-migration.sh：用于迁移Kafka和ZooKeeper的安全配置。
+
+启动脚本
+检查命令行参数：脚本首先检查是否提供了足够的命令行参数，如果参数不足则显示用法说明并退出脚本。
+
+设置环境变量和类路径：脚本根据Kafka的安装目录和相关依赖库设置了一系列的环境变量和类路径，包括Kafka的核心、连接器、工具以及其他相关库的路径。
+
+设置JVM选项：脚本设置了一些JVM选项，如堆内存大小、GC日志、JMX等。
+
+检查操作系统类型：脚本通过判断操作系统类型（Cygwin或非Cygwin）来确定是否进行路径格式转换。
+
+启动模式：脚本根据是否使用了-daemon参数来判断启动模式。如果是后台模式（daemon mode），则使用nohup命令以后台方式执行Java命令，将输出重定向到日志文件。如果不是后台模式，则使用exec命令以前台方式执行Java命令。
+
+启动Java进程：脚本使用Java命令执行Kafka相关的Java类，并传递相应的参数。
