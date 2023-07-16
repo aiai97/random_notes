@@ -782,3 +782,182 @@ GET /products/_search?filter_path=hits.total
   }
 }
 在这个示例中，我们使用filter_path参数来只返回匹配文档的总数，而不返回具体的文档内容。
+
+Match Query:
+
+bash
+Copy code
+GET /products/_search
+{
+  "query": {
+    "match": {
+      "title": "手机"
+    }
+  }
+}
+这个示例使用 Match 查询来搜索包含关键词"手机"的商品。
+
+Term Query:
+
+bash
+Copy code
+GET /products/_search
+{
+  "query": {
+    "term": {
+      "category": "electronics"
+    }
+  }
+}
+在这个示例中，使用 Term 查询来匹配具有特定类别（category）的商品。
+
+Bool Query:
+
+bash
+Copy code
+GET /products/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        { "match": { "title": "手机" } },
+        { "range": { "price": { "gte": 500 } } }
+      ],
+      "must_not": [
+        { "term": { "category": "electronics" } }
+      ]
+    }
+  }
+}
+这个示例展示了 Bool 查询的使用，通过组合多个子查询和逻辑条件来构建复杂的查询逻辑。
+
+Range Query:
+
+bash
+Copy code
+GET /products/_search
+{
+  "query": {
+    "range": {
+      "price": {
+        "gte": 100,
+        "lte": 1000
+      }
+    }
+  }
+}
+在这个示例中，使用 Range 查询来匹配价格在100到1000之间的商品。
+
+Terms Query:
+
+bash
+Copy code
+GET /products/_search
+{
+  "query": {
+    "terms": {
+      "color": ["red", "blue", "green"]
+    }
+  }
+}
+这个示例展示了 Terms 查询的使用，匹配颜色为红色、蓝色或绿色的商品。
+
+Nested Query:
+
+bash
+Copy code
+GET /products/_search
+{
+  "query": {
+    "nested": {
+      "path": "variants",
+      "query": {
+        "match": {
+          "variants.color": "red"
+        }
+      }
+    }
+  }
+}
+在这个示例中，使用 Nested 查询来搜索具有特定颜色（color）的商品变体。
+
+Query and filter context:
+示例:
+
+bash
+Copy code
+GET /products/_search
+{
+  "query": {
+    "bool": {
+      "filter": [
+        { "term": { "category": "Electronics" } },
+        { "range": { "price": { "gte": 500, "lte": 1000 } } }
+      ],
+      "must": [
+        { "match": { "title": "iPhone" } }
+      ]
+    }
+  }
+}
+解释:
+此示例中，我们使用布尔查询（bool query）的 query 和 filter 子句来实现查询和过滤的组合。filter 子句用于筛选出类别为 "Electronics" 并且价格在 500 到 1000 之间的产品。query 子句则要求商品标题中包含 "iPhone" 关键词的产品。
+
+Compound queries:
+示例:
+
+bash
+Copy code
+GET /products/_search
+{
+  "query": {
+    "bool": {
+      "must": [
+        { "match": { "title": "iphone" } }
+      ],
+      "should": [
+        { "term": { "brand": "Apple" } },
+        { "term": { "brand": "Samsung" } }
+      ],
+      "minimum_should_match": 1
+    }
+  }
+}
+解释:
+此示例中，我们使用布尔查询的 must 和 should 子句来实现组合查询。must 子句要求商品标题必须匹配 "iphone" 关键词。should 子句定义了品牌为 "Apple" 或 "Samsung" 的条件，并通过设置 minimum_should_match 参数为 1，表示至少满足一个 should 子句。
+
+Full text queries:
+示例:
+
+bash
+Copy code
+GET /products/_search
+{
+  "query": {
+    "match": {
+      "description": "high-definition display"
+    }
+  }
+}
+解释:
+此示例中，我们使用 match 查询实现全文搜索。它搜索商品描述中包含 "high-definition display" 的产品。
+
+Geo queries:
+示例:
+
+bash
+Copy code
+GET /locations/_search
+{
+  "query": {
+    "geo_distance": {
+      "distance": "10km",
+      "location": {
+        "lat": 40.7128,
+        "lon": -74.0060
+      }
+    }
+  }
+}
+解释:
+此示例中，我们使用 geo_distance 查询进行地理位置搜索。它查找距离给定坐标（纬度：40.7128，经度：-74.0060）10 公里内的位置。
