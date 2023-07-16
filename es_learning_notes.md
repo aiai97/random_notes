@@ -961,3 +961,186 @@ GET /locations/_search
 }
 解释:
 此示例中，我们使用 geo_distance 查询进行地理位置搜索。它查找距离给定坐标（纬度：40.7128，经度：-74.0060）10 公里内的位置。
+Shape queries:
+示例:
+
+bash
+Copy code
+GET /locations/_search
+{
+  "query": {
+    "geo_shape": {
+      "location": {
+        "shape": {
+          "type": "circle",
+          "coordinates": [-74.0060, 40.7128],
+          "radius": "10km"
+        },
+        "relation": "within"
+      }
+    }
+  }
+}
+解释:
+此示例中，我们使用 geo_shape 查询进行形状搜索。它查找在给定的圆形范围（半径为10公里，中心坐标为经度-74.0060，纬度40.7128）内的位置。
+
+Joining queries:
+示例:
+
+bash
+Copy code
+GET /orders/_search
+{
+  "query": {
+    "has_child": {
+      "type": "items",
+      "query": {
+        "term": { "product": "iPhone" }
+      }
+    }
+  }
+}
+解释:
+此示例中，我们使用 has_child 查询来查找具有子文档（类型为 "items"）中包含指定产品 "iPhone" 的订单。
+
+Match all:
+示例:
+
+bash
+Copy code
+GET /products/_search
+{
+  "query": {
+    "match_all": {}
+  }
+}
+解释:
+此示例中，我们使用 match_all 查询来匹配所有文档，返回索引中的所有产品。
+
+Span queries:
+示例:
+
+vbnet
+Copy code
+GET /text/_search
+{
+  "query": {
+    "span_near": {
+      "clauses": [
+        { "span_term": { "field": "quick" } },
+        { "span_term": { "field": "brown" } },
+        { "span_term": { "field": "fox" } }
+      ],
+      "slop": 1,
+      "in_order": true
+    }
+  }
+}
+解释:
+此示例中，我们使用 span_near 查询来查找包含 "quick"、"brown" 和 "fox" 这三个词的文本，并要求它们按指定的顺序相邻出现，允许一个词的间隔。
+
+Specialized queries:
+示例:
+
+bash
+Copy code
+GET /products/_search
+{
+  "query": {
+    "more_like_this": {
+      "fields": ["title", "description"],
+      "like": "iPhone",
+      "min_term_freq": 1,
+      "min_doc_freq": 1
+    }
+  }
+}
+解释:
+此示例中，我们使用 more_like_this 查询来查找与 "iPhone" 相似的产品，其中相似性基于标题和描述字段，并要求至少在一个文档中出现一次。
+
+Term-level queries:
+示例:
+
+bash
+Copy code
+GET /products/_search
+{
+  "query": {
+    "term": {
+      "category.keyword": "Electronics"
+    }
+  }
+}
+解释:
+此示例中，我们使用 term 查询来精确匹配 "category.keyword" 字段为 "Electronics" 的产品。
+
+Text expansion:
+示例:
+
+bash
+Copy code
+GET /products/_search
+{
+  "query": {
+    "query_string": {
+      "query": "iPhone OR Samsung",
+      "default_field": "title"
+    }
+  }
+}
+解释:
+此示例中，我们使用 query_string 查询来进行文本扩展搜索，查找包含 "iPhone" 或 "Samsung" 关键词的产品，并指定在 "title" 字段中进行搜索。
+
+minimum_should_match parameter:
+示例:
+
+bash
+Copy code
+GET /products/_search
+{
+  "query": {
+    "bool": {
+      "should": [
+        { "term": { "brand": "Apple" } },
+        { "term": { "brand": "Samsung" } }
+      ],
+      "minimum_should_match": 2
+    }
+  }
+}
+解释:
+此示例中，我们使用 bool 查询的 should 子句来定义多个条件，要求至少满足两个条件才算匹配成功。
+
+rewrite parameter:
+示例:
+
+bash
+Copy code
+GET /products/_search
+{
+  "query": {
+    "query_string": {
+      "query": "iphone OR samsung",
+      "default_field": "title",
+      "rewrite": "scoring_boolean"
+    }
+  }
+}
+解释:
+此示例中，我们使用 query_string 查询来进行文本搜索，并使用 scoring_boolean 作为 rewrite 参数，它会对查询进行重写以生成更准确的评分。
+
+Regular expression syntax:
+示例:
+
+bash
+Copy code
+GET /products/_search
+{
+  "query": {
+    "regexp": {
+      "title.keyword": ".*phone.*"
+    }
+  }
+}
+解释:
+此示例中，我们使用 regexp 查询来根据正则表达式 ".phone." 对 "title.keyword" 字段进行匹配，查找包含 "phone" 关键词的产品标题。
