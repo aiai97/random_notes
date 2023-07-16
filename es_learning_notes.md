@@ -442,4 +442,138 @@ Indexing pressure: 这部分涉及 Elasticsearch 中索引过程对系统资源�
 索引管理和性能优化：Index Shard Allocation、Index blocks、Merge、Store、Translog、History retention。这些部分关注于索引的管理、性能优化和存储机制，包括控制索引分片的分配、处理索引块、合并索引分段、存储和压缩数据、管理事务日志以及设置索引历史记录的保留策略。
 
 性能监测和优化：Slow Log、Indexing pressure。这些部分关注于性能监测和优化，包括记录和分析慢查询日志以识别性能瓶颈、了解索引过程对系统资源的压力以及调整索引过程的资源管理策略。
+ ##### mapping
+ Dynamic mapping（动态映射）: 动态映射允许 Elasticsearch 根据索引中的数据自动创建和更新映射。当你需要将数据索引到 Elasticsearch 时，且希望系统自动创建或更新字段映射，而无需显式定义字段的映射规则时，可以使用动态映射。
+
+Explicit mapping（显式映射）: 显式映射允许你显式定义字段的映射规则。当你希望对字段的数据类型、分词器、索引设置等进行精确控制时，可以使用显式映射。显式映射可以确保索引中的字段按照你的要求进行分析和处理。
+
+Runtime fields（运行时字段）: 运行时字段允许你在查询时临时定义新的字段，而无需在索引映射中进行定义。当你需要在查询期间临时添加新的字段，进行计算、转换或聚合等操作时，可以使用运行时字段。
+
+Field data types（字段数据类型）: 字段数据类型定义了字段中存储的数据类型，例如文本、数值、日期等。根据你要存储的数据的类型和需要进行的操作，选择适当的字段数据类型是很重要的。
+
+Metadata fields（元数据字段）: 元数据字段是 Elasticsearch 预定义的一些特殊字段，用于存储有关文档和索引的元数据信息，如文档 ID、版本号、索引名等。当你需要访问或操作文档和索引的元数据信息时，可以使用元数据字段。
+
+Mapping parameters（映射参数）: 映射参数是用于配置字段映射的可选参数，用于控制字段的行为和性能。例如，你可以使用参数来定义是否存储字段值、是否启用倒排索引等。
+
+Mapping limit settings（映射限制设置）: 映射限制设置允许你在索引级别设置映射的相关限制，如最大字段数、最大嵌套深度等。这些设置可以帮助你控制索引的结构和大小，以及防止映射的滥用或不当使用。
+
+Removal of mapping types（移除映射类型）: Elasticsearch 7.x 版本及以上移除了多个映射类型的概念，索引中只允许存在一个默认映射类型。这意味着你不再需要管理多个映射类型，而是直接操作单个默认类型。这个变化主要是为了简化索引结构和提高性能。
+
+根据具体的需求和使用场景，你可以选择适当的映射方式和参数。例如，当你有一批动态变化的数据需要索引时，可以使用动态映射；当你需要精确控制字段的映射规则时，可以使用显式映射；当你需要在查询期间动态添加新的字段时，可以使用运行时字段。根据具体的字段数据类型和元数据信息的需求，选择相应的数据类型和元数据字段。同时，你可以根据索引的大小、性能要求和安全需求，配置映射的限制设置和参数。
+
+动态映射（Dynamic Mapping）示例：
+假设你有一个电商平台，用户可以发布商品信息。当用户创建新的商品文档时，Elasticsearch可以根据文档的字段自动创建映射。例如，用户创建了一个名为"iPhone"的商品文档，包含字段"title"、"price"和"description"。Elasticsearch会根据这些字段自动推断出它们的数据类型（例如，"title"为text，"price"为float，"description"为text），并创建相应的映射。
+
+显式映射（Explicit Mapping）示例：
+假设你正在处理银行业务的账户信息。你想要确保账户号码是一个整数类型，并且账户余额是一个浮点数类型。你可以使用显式映射来定义字段的映射规则。以下是一个示例映射：
+
+当然，我会提供具体的示例，以帮助你更好地理解这些映射的语法意义和用法。
+
+动态映射（Dynamic Mapping）示例：
+假设你有一个电商平台，用户可以发布商品信息。当用户创建新的商品文档时，Elasticsearch可以根据文档的字段自动创建映射。例如，用户创建了一个名为"iPhone"的商品文档，包含字段"title"、"price"和"description"。Elasticsearch会根据这些字段自动推断出它们的数据类型（例如，"title"为text，"price"为float，"description"为text），并创建相应的映射。
+
+显式映射（Explicit Mapping）示例：
+假设你正在处理银行业务的账户信息。你想要确保账户号码是一个整数类型，并且账户余额是一个浮点数类型。你可以使用显式映射来定义字段的映射规则。以下是一个示例映射：
+
+PUT /bank-accounts
+{
+  "mappings": {
+    "properties": {
+      "account_number": {
+        "type": "integer"
+      },
+      "balance": {
+        "type": "float"
+      }
+    }
+  }
+}
+在这个示例中，我们明确指定了"account_number"字段的数据类型为整数，"balance"字段的数据类型为浮点数。这样，Elasticsearch会根据这些映射规则来处理和索引账户信息。
+
+运行时字段（Runtime Fields）示例：
+假设你的电商平台需要根据用户选择的不同属性来计算商品的折扣价格。你可以使用运行时字段来动态添加新的字段，并使用脚本来计算折扣价格。以下是一个示例：
+
+POST /products/_doc
+{
+  "title": "iPhone",
+  "price": 1000,
+  "discount": {
+    "script": {
+      "source": "params.price * 0.9"
+    }
+  }
+}
+在这个示例中，我们使用运行时字段"discount"来计算折扣价格。通过脚本"params.price * 0.9"，我们将价格字段"price"乘以0.9来计算折扣后的价格。
+
+字段数据类型（Field Data Types）示例：
+假设你有一个新闻网站，你想要存储新闻文章的发布日期和内容。你可以使用字段数据类型来指定这些字段的数据类型。以下是一个示例：
+
+bash
+Copy code
+PUT /news-articles
+{
+  "mappings": {
+    "properties": {
+      "publish_date": {
+        "type": "date"
+      },
+      "content": {
+        "type": "text"
+      }
+    }
+  }
+}
+在这个示例中，我们将"publish_date"字段的数据类型指定为日期类型，将"content"字段的数据类型指定为文本类型。这样，Elasticsearch可以正确地处理和索引这些字段的值。
+
+元数据字段（Metadata Fields）示例：
+在Elasticsearch中，一些特殊字段被用作元数据字段，用于控制索引和文档的行为。例如，"_id"字段用于唯一标识文档，"_index"字段用于指定索引名称。以下是一个示例：
+
+POST /my-index/_doc/1
+{
+  "_id": "12345",
+  "title": "Example Document"
+}
+在这个示例中，我们在创建文档时使用"_id"字段来指定文档的唯一标识符为"12345"。这样，Elasticsearch会将这个值作为文档的唯一标识符，并将其用于索引和检索操作。
+Mapping parameters（映射参数）
+示例：定义日期字段的格式
+
+bash
+Copy code
+PUT /my_index
+{
+  "mappings": {
+    "properties": {
+      "created_at": {
+        "type": "date",
+        "format": "yyyy-MM-dd HH:mm:ss"
+      }
+    }
+  }
+}
+在上面的示例中，我们使用了映射参数 "format" 来指定 "created_at" 字段的日期格式。这样，在索引数据时，Elasticsearch 将按照指定的格式解析和处理日期字段的值。
+
+Mapping limit settings（映射限制设置）
+示例：设置字符串字段的最大长度
+
+bash
+Copy code
+PUT /my_index
+{
+  "mappings": {
+    "dynamic": "strict",
+    "properties": {
+      "title": {
+        "type": "text",
+        "max_length": 100
+      }
+    }
+  }
+}
+在上面的示例中，我们使用了映射限制设置 "max_length" 来限制 "title" 字段的最大长度为 100 个字符。这样，在索引数据时，如果超过了指定的最大长度，Elasticsearch 将会抛出错误或截断字段值。
+
+Removal of mapping types（移除映射类型）
+在较新的 Elasticsearch 版本中，移除了映射类型的概念。在过去的版本中，我们可以为同一索引定义多个映射类型，但现在已经不推荐使用映射类型，并计划在将来的版本中完全移除。因此，对于移除映射类型的示例，我们可以不进行具体的代码示范。
+
+总的来说，映射参数和映射限制设置可以帮助你定义和控制字段的特定行为和限制条件，以满足数据的需求和规范。而移除映射类型则是 Elasticsearch 在版本演进中的变化，旨在简化索引的管理和提高性能。
+
 
