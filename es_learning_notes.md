@@ -1,4 +1,5 @@
 ####  查询
+```
 Match Query（全文搜索查询）
 
 关键字：match
@@ -135,6 +136,7 @@ SQL类比：WHERE子句
 Range Aggregation（范围聚合）
 
 SQL类比：CASE WHEN
+```
 #### 索引模块
 Index Modules（索引模块）：Index Modules是Elasticsearch用于管理索引的模块。它提供了索引创建、配置和删除等功能。
 
