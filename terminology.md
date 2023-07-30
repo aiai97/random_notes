@@ -2,3 +2,4 @@
 "Plumbing code" 是指编程中用于连接或处理不直接与业务逻辑相关的部分的代码。类似于管道在建筑物中用于将水流从一个地方传输到另一个地方，"plumbing code" 在软件开发中用于将数据或功能从一个模块传递到另一个模块，或者在不同的组件之间建立连接。
 
 在编程中，有很多与业务逻辑无关但必要的任务，例如数据验证、错误处理、日志记录、配置管理等。这些任务通常被称为 "plumbing"，因为它们就像管道一样将数据或功能传递到合适的位置，而不是直接处理业务逻辑。
+Plumbing code not only makes programming longer but also reduces the readability of code. For example, in JDBC programming, a lot of code is required for simple functionality. Connection establishment and exception handling span many lines of code.
