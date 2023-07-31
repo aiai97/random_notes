@@ -7,6 +7,7 @@ var createHelloWorld = function() {
     }
 };
 ```
+
 arrow syntax
 var createHelloWorld = function() {
     return () => "Hello World";
