@@ -9,12 +9,15 @@ var createHelloWorld = function() {
 ```
 
 arrow syntax
+```
 var createHelloWorld = function() {
     return () => "Hello World";
 };
 function sum(x, y, z) {
   return x + y + z;
 }
+```
+
 #### spread syntax
 const numbers = [1, 2, 3];
 
