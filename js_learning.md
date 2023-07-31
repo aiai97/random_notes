@@ -18,6 +18,8 @@ function sum(x, y, z) {
 }
 ```
 
+
+
 #### spread syntax
 const numbers = [1, 2, 3];
 
