@@ -46,4 +46,16 @@ Omission
 A node fails to respond to incoming requests.
 Byzantine
 A node exhibits arbitrary behavior: it may transmit arbitrary messages at arbitrary times, take incorrect steps, or stop.
+
+Multiple deliveries of a message
+Example consequence
+Avoiding multiple deliveries of a message
+Idempotent operations approach
+Example of idempotent operation
+Example of non-idempotent operation
+De-duplication approach
+Example
+Difference between delivery and processing
+Other delivery semantics
+
 Concurrency
