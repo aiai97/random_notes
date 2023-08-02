@@ -20,4 +20,9 @@ Why distributed systems are hard to design
 Properties that make distributed systems challenging
 Network asynchrony
 Partial failures
+
+Measures of Correctness
+Safety
+Liveness
+Example of a correct system
 Concurrency
