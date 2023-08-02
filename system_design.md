@@ -25,4 +25,15 @@ Measures of Correctness
 Safety
 Liveness
 Example of a correct system
+
+Properties each system follows
+The main important properties in a distributed system concern the following:
+
+How the nodes of a distributed system interact with each other
+How the nodes of a distributed system can fail
+Categories of distributed systems
+There are two main categories of distributed systems that depend on the nature of communication:
+
+Synchronous systems
+Asynchronous systems
 Concurrency
