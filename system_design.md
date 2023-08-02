@@ -36,4 +36,14 @@ There are two main categories of distributed systems that depend on the nature o
 
 Synchronous systems
 Asynchronous systems
+
+Types of failures
+Fail-stop
+A node halts and remains halted permanently. Other nodes can detect that the node has failed (i.e., by communicating with it).
+Crash
+A node halts, but silently. So, other nodes may not be able to detect this state. They can only assume its failure when they are unable to communicate with it.
+Omission
+A node fails to respond to incoming requests.
+Byzantine
+A node exhibits arbitrary behavior: it may transmit arbitrary messages at arbitrary times, take incorrect steps, or stop.
 Concurrency
