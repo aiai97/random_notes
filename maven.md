@@ -42,3 +42,29 @@ mvn package  # 执行default生命周期的package阶段，打包项目
 mvn install  # 执行default生命周期的install阶段，安装到本地仓库
 mvn deploy  # 执行default生命周期的deploy阶段，部署到远程仓库
 通过配置pom.xml文件和执行相应的命令，可以灵活地管理和执行项目的构建流程。
+
+在Maven中，构建和部署项目的过程被划分为不同的生命周期和阶段。Maven生命周期由三个主要的生命周期（生命周期是一个抽象的构建阶段）组成，每个生命周期又由一系列的阶段（实际构建步骤）组成。这三个主要的生命周期是：clean、default和site。
+
+clean生命周期：
+
+clean：执行项目的清理操作，删除生成的输出文件。通常是执行命令mvn clean。
+default生命周期：
+
+validate：验证项目是否正确且所有必要的信息可用。
+compile：将项目的源代码编译成可执行的Java字节码。
+test：运行单元测试代码。
+package：将编译后的代码打包成可分发的格式，如JAR。
+verify：运行附加的验证步骤，检查打包的内容是否有效且符合质量标准。
+install：将包安装到本地仓库，使得其可以在本地其他项目中引用。
+deploy：将最终的包复制到远程仓库，使得其可以被其他开发者或项目引用。
+site生命周期：
+
+site：生成项目站点的文档。
+site-deploy：将生成的站点文档部署到服务器上，以便公开访问。
+每个生命周期包含一系列的阶段，这些阶段按照特定的顺序执行。在执行某个生命周期时，它将依次执行其中包含的所有阶段。例如，执行default生命周期时，Maven会按顺序执行validate、compile、test、package等阶段。
+
+举例说明：假设你有一个Java项目，并且你想构建它并将其部署到远程仓库。
+
+使用mvn clean执行clean生命周期的clean阶段，清理目标文件夹中的旧构建输出。
+使用mvn install执行default生命周期的validate、compile、test、package、verify、install阶段，编译项目、运行测试、打包成JAR，并将JAR安装到本地Maven仓库。
+使用mvn deploy执行default生命周期的validate、compile、test、package、verify、install和deploy阶段，除了本地安装外，还将JAR复制到远程仓库，以便其他开发者或项目可以访问并使用你的项目。
