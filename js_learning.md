@@ -19,7 +19,6 @@ function sum(x, y, z) {
 ```
 
 
-
 #### spread syntax
 const numbers = [1, 2, 3];
 
@@ -236,4 +235,49 @@ async function fetchDataAndProcess() {
 }
 
 fetchDataAndProcess();
+```
+Understanding Promise Returns in Async Functions
+```
+async function example() {
+    try {
+        return new Promise((resolve, reject) => {
+            throw new Error('Oops!');
+        });
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+example(); // The error is not caught, and it rejects the promise returned by example.
+
+async function example2() {
+    try {
+        return await new Promise((resolve, reject) => {
+            throw new Error('Oops!');
+        });
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+example2(); // The error is caught, and the promise returned by example2 is resolved.
+```
+Approach 1: Asynchronous Programming with Promises and setTimeout
+```
+async function sleep(millis) {
+  return new Promise((res,rej) => {
+    try {
+      setTimeout(() => res(5), millis)
+    } catch(err) {
+      rej(err)
+    }
+  })
+}
+```
+创建一个异步函数，它会在指定的毫秒数后返回一个成功的Promise，并且Promise的结果为5。但是它无法捕获setTimeout函数内部的异常。
+Approach 2: Asynchronous Programming with Promises and setTimeout without Return
+```
+async function sleep(milliseconds) {
+	await new Promise(res => setTimeout(res, milliseconds)); 
+}
 ```
