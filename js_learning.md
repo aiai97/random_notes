@@ -149,3 +149,57 @@ fetchInsuranceData()
 
 
 
+在JavaScript中，通常我们可以根据任务的特性来判断它是否是异步的。以下是一些常见的异步任务：
+
+网络请求：发送HTTP请求到服务器并等待响应是异步的操作。例如，使用fetch或XMLHttpRequest来获取数据。
+
+定时器：使用setTimeout或setInterval函数创建的定时器是异步的，因为它们在一定延迟后执行回调函数。
+
+事件监听：注册事件监听器，例如点击事件、键盘事件等，都是异步的操作。
+
+文件读写：读取文件内容或将数据写入文件通常是异步的操作。
+
+Promise和async/await：使用Promise对象或async/await关键字处理异步操作。
+
+这些任务之所以是异步的，是因为它们涉及到等待一些外部事件或资源的返回或处理。在等待期间，JavaScript引擎会继续执行其他代码，而不会阻塞主线程的执行。
+
+反过来，同步任务是指在执行期间会阻塞主线程的任务。在同步任务执行期间，JavaScript引擎会等待它们完成，然后再继续执行后续代码。
+
+```
+console.log("Starting the timer...");
+
+// setTimeout returns a Timeout object which can be used to reference the timer
+let timeoutId = setTimeout(() => {
+  console.log("Timeout completed!");
+}, 2000);
+
+// Some condition or logic
+if (/* some condition */) {
+// Cancels the timeout
+  clearTimeout(timeoutId);
+}
+```
+```
+// The 'async' keyword allows the use of 'await' inside the function
+button.addEventListener('click', async () => {
+    // Show a loading spinner
+    spinner.style.display = 'block';
+
+    try {
+        // Fetch data from server
+        let response = await fetch('https://api.example.com/items');
+
+        // Parse the JSON response
+        let items = await response.json();
+
+        // Update the UI with the new items
+        displayItems(items);
+    } catch (error) {
+        // Handle any errors
+        console.error('Error:', error);
+    } finally {
+        // Hide the loading spinner
+        spinner.style.display = 'none';
+    }
+});
+```
