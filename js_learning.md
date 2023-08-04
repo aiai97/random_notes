@@ -277,7 +277,16 @@ async function sleep(millis) {
 创建一个异步函数，它会在指定的毫秒数后返回一个成功的Promise，并且Promise的结果为5。但是它无法捕获setTimeout函数内部的异常。
 Approach 2: Asynchronous Programming with Promises and setTimeout without Return
 ```
-async function sleep(milliseconds) {
-	await new Promise(res => setTimeout(res, milliseconds)); 
+async function sleep(millis) {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      try {
+        resolve(5);
+      } catch (err) {
+        reject(err);
+      }
+    }, millis);
+  });
 }
 ```
+res和rej是Promise构造函数中的两个函数参数，用于将Promise的状态设置为resolved（成功）或rejected（失败）。
