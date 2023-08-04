@@ -203,3 +203,37 @@ button.addEventListener('click', async () => {
     }
 });
 ```
+使用显式的.then()和.catch()方法：
+使用async/await关键字：
+```
+// Using explicit .then() and .catch() with promises
+fetchData()
+  .then(response => {
+    // Handle the response
+    console.log("Response:", response);
+    return processData(response);
+  })
+  .then(result => {
+    // Handle the processed data
+    console.log("Processed data:", result);
+  })
+  .catch(error => {
+    // Handle any errors
+    console.error("Error:", error);
+  });
+
+// Using async/await
+async function fetchDataAndProcess() {
+  try {
+    const response = await fetchData();
+    console.log("Response:", response);
+
+    const result = await processData(response);
+    console.log("Processed data:", result);
+  } catch (error) {
+    console.error("Error:", error);
+  }
+}
+
+fetchDataAndProcess();
+```
