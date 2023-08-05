@@ -290,7 +290,9 @@ async function sleep(millis) {
 }
 ```
 res和rej是Promise构造函数中的两个函数参数，用于将Promise的状态设置为resolved（成功）或rejected（失败）。
-
+setTimeout: setTimeout 是 JavaScript 提供的一个定时器函数，用于在一定的时间后执行一个回调函数。它接收两个参数：一个回调函数和一个时间间隔（以毫秒为单位）。当调用 setTimeout 后，它会在指定的时间间隔后触发回调函数。
+clearTimeout: clearTimeout 用于取消之前通过 setTimeout 创建的定时器。它接收一个定时器ID作为参数，这个ID是 setTimeout 返回的。通过调用 clearTimeout，我们可以取消尚未触发的定时器。
+Approach 1: setTimeout + clearTimeout + Class Syntax
 ```
 var TimeLimitedCache = function() {
     this.cache = new Map();
