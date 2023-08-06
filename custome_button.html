@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Custom Button Example</title>
+</head>
+
+<body>
+  <!-- 普通按钮 -->
+  <button type="button" onclick="alert('Hello World!')">Click me (普通按钮)</button>
+
+  <!-- 自定义按钮 -->
+  <button type="button" id="customButton">Custom Button (自定义按钮)</button>
+
+  <script>
+    // 使用JavaScript给自定义按钮添加事件处理程序
+    document.getElementById('customButton').addEventListener('click', function() {
+      console.log('Custom button clicked! (自定义按钮被点击)');
+      // 在这里执行你想要的自定义操作
+    });
+  </script>
+</body>
+
+</html>

@@ -337,3 +337,67 @@ TimeLimitedCache.prototype.count = function() {
  * obj.count() // 1
  */
 ```
+
+在JavaScript中，let，var，和const是用于声明变量的关键字，它们有一些不同的特性和用途。
+
+var：
+
+var在ES5及之前的版本中使用，它是函数作用域的，意味着变量在函数内部声明时在整个函数范围内都可见。
+如果在块级作用域（如if语句、for循环等）内声明var变量，则该变量在整个函数内都可见。
+可以重复声明同名变量，且不会报错，会覆盖之前的变量。
+let：
+
+let引入了块级作用域，它在ES6及之后的版本中使用。
+声明的变量具有块级作用域，在if语句、for循环等块级作用域内声明的变量只在该块内可见。
+不能重复声明同名变量，否则会报错。
+const：
+
+const也是在ES6及之后的版本中引入的，它用于声明常量，即一旦声明后就不能再修改它的值。
+声明的常量也具有块级作用域，与let相同。
+常量必须在声明时就赋予初始值，且不能再修改它的值。
+推荐的使用场景：
+
+使用const来声明那些不需要被修改的变量，这样可以增加代码的可读性和安全性。
+使用let来声明那些需要在作用域内被修改的变量。
+尽量避免使用var，除非必须要与旧版本的JavaScript代码兼容。
+
+迭代数组：for...of循环适用于遍历数组元素，可以取代传统的for循环来遍历数组。它的语法更加简洁易读。
+const array = [1, 2, 3, 4, 5];
+for (const element of array) {
+  console.log(element);
+}
+迭代字符串：for...of循环可以用来遍历字符串中的字符。
+const str = "Hello";
+for (const char of str) {
+  console.log(char);
+}
+迭代可迭代对象：for...of循环适用于遍历实现了可迭代协议（Iterable protocol）的对象，如Array、Set、Map等。
+
+const set = new Set([1, 2, 3]);
+for (const value of set) {
+  console.log(value);
+}
+迭代自定义数据结构：如果你自定义了一个数据结构，并且想要支持迭代，可以在对象上实现迭代器（Iterator）接口，然后使用for...of来遍历该数据结构。
+
+const customDataStructure = {
+  data: [1, 2, 3],
+  [Symbol.iterator]: function* () {
+    for (let i = 0; i < this.data.length; i++) {
+      yield this.data[i];
+    }
+  },
+};
+
+for (const item of customDataStructure) {
+  console.log(item);
+}
+总的来说，for...of循环是一种更加简洁、易读的迭代方式，适用于遍历可迭代对象的元素。它通常比传统的for循环更加直观和方便
+function*关键字表示一个生成器函数（Generator Function）。生成器函数用于定义迭代器，通过使用yield关键字来产生一个序列的值。生成器函数是ES6引入的新特性，用于更方便地实现迭代逻辑。
+
+解释一下代码的含义：
+
+customDataStructure是一个自定义的数据结构对象，它包含一个data属性，该属性是一个数组。
+
+通过[Symbol.iterator]键，我们定义了一个生成器函数作为对象的迭代器。这个键是一个Symbol，它是ES6引入的一种特殊的数据类型，用于创建唯一的属性键。
+
+在生成器函数中，我们使用for循环和yield关键字来遍历data数组中的元素。每次调用生成器的next()方法时，代码执行到yield语句时会暂停，并将yield后面的值返回给调用者。当下一次调用next()方法时，代码会从上次暂停的地方继续执行，直到遇到下一个yield语句。
