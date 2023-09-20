@@ -1,4 +1,2 @@
 # random_notes
-I am recording my daily learning.
-I am proud that I am an intp.
-I am doing leetcode everyday.
+I am querulous and a troublesome problem but I love myself.
